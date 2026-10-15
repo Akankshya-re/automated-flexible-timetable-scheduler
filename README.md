@@ -27,6 +27,7 @@ The project aims to automate this process through a constraint-based scheduling 
 - **One-Click Local Execution:** Includes Windows batch scripts to simplify launching the frontend and backend locally.
 
 ## Application Preview
+<img width="1897" height="1038" alt="image" src="https://github.com/user-attachments/assets/dac776fe-207f-4f2b-80b5-c14baf563f4f" />
 
 
 ## Technology Stack
