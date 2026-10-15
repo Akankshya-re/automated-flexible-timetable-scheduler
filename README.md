@@ -78,7 +78,7 @@ The application follows a modular frontend-backend architecture that separates u
         Interactive Grid UI
 ```
 
-*The diagram represents the high-level architecture. Refer to the backend implementation for the exact execution and data-access sequence.*
+*The diagram represents the high-level architecture.*
 
 ## Application Workflow
 
@@ -102,39 +102,6 @@ The scheduling engine evaluates the academic sessions and applicable constraints
 
 The generated timetable is displayed in an interactive weekly grid. The interface provides scheduling status, room assignments, conflict information, and visibility into any unassigned sessions.
 
-## Project Structure
-
-```text
-Automated-Flexible-Timetable-Scheduler/
-│
-├── backend/
-│   ├── main.py
-│   ├── solver.py
-│   ├── ingestion.py
-│   ├── database.py
-│   ├── auth.py
-│   ├── requirements.txt
-│   └── ...
-│
-├── frontend/
-│   ├── src/
-│   ├── public/
-│   ├── package.json
-│   ├── vite.config.js
-│   └── ...
-│
-├── docs/
-│   └── screenshots/
-│       └── dashboard.png
-│
-├── RULES.md
-├── timetable_input.xlsx
-├── Launch__Timetable.bat
-├── README.md
-└── .gitignore
-```
-
-*This is an indicative structure.*
 
 ### Key Components
 
@@ -203,15 +170,7 @@ Create the appropriate frontend environment configuration if required by the app
 
 ### 4. Launch the Application
 
-Use the provided `Launch__Timetable.bat` or `run_app.bat` script if it is configured to launch both services.
-
-Alternatively, start the backend and frontend using the commands specified in their respective configurations. For example, a Vite frontend commonly runs using:
-
-```bash
-npm run dev
-```
-
-The exact backend startup command depends on whether the application uses FastAPI, Flask, or another framework. Consult the existing backend entry point and README configuration.
+Use the provided `run_app.bat` script.
 
 ## Results and Performance
 
