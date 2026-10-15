@@ -250,3 +250,10 @@ Refer to `RULES.md` and `backend/solver.py` for the exact constraints enforced b
 - **Enhanced scheduling:** Additional constraints and optimisation objectives could be incorporated as requirements evolve.
 - **Testing:** Broader validation across diverse datasets and infeasible scheduling scenarios would strengthen reliability.
 
+## Contributions
+
+This project was developed collaboratively as part of an academic software development project. The team worked on the design, implementation, integration, and testing of the Automated Flexible Timetable Scheduler.
+
+Key areas of contribution included frontend development, backend scheduling logic, Excel-based data ingestion, database management, user interface design, testing, and project documentation.
+
+This repository presents the collaborative project, with individual contributions acknowledged according to the work performed by each team member.
