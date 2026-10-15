@@ -1,91 +1,250 @@
-# TimeTable
-This is a GUI based flexible timetable website
-# Timetable System Parameters & Mandatory Rules
+# Automated Flexible Timetable Scheduler
 
-## 1. System Parameters
+A full-stack web application that automates academic timetable generation using constraint-based scheduling, Excel data ingestion, and an interactive timetable visualisation interface.
 
-### Slots Category
-- **Morning (8:00 - 13:00):** Denote as `SL0`
-- **Afternoon (14:00 - 18:00):** Denote as `SL1`
+## Overview
 
-### Week Structure
-- 5 Days (Monday to Friday): Denote as `D1, D2, D3, D4, D5`
+Manual academic timetable preparation is time-consuming and prone to errors, including faculty scheduling conflicts, classroom overbooking, and overlapping academic sessions. The **Automated Flexible Timetable Scheduler** addresses these challenges by providing a centralised application that processes academic data, automatically assigns sessions to suitable time slots and rooms, and presents the generated timetable through a user-friendly graphical interface.
 
-### Hourly Allocation Structure
-- Denote as `Hx` where:
-  - `H0` = 1 hr slot
-  - `H1` = 1.5 hr slot
-  - `H2` = Hybrid slot
-- *Note: Hybrid slots are strictly for courses with a 4-hour weekly requirement. They can consist of a mix of both 1.5 hr and 1 hr classes.*
+The application combines a React.js frontend with a Python backend and SQLite database to streamline timetable generation and management.
 
-### Slot Starting Times
-- **1 hr Slots:** 8, 9, 10, 11, 12, 13, 14, 15, 16, 17
-- **1.5 hr Slots:** 8, 9, 10, 11, 12, 16
+## Problem Statement
 
-### Course Classification
-- **Types:** Lab (`L`), Tutorial (`T`), Theory (`C` for Core, `E` for Elective/Open Elective)
-- **Year-wise Split Index:**
-  - `1` = BTech 1st Year
-  - `2` = BTech 2nd Year
-  - `3` = BTech 3rd Year
-  - `4` = BTech 4th Year
-  - `5` = MTech
-  - `6` = Elective
-  - `7` = Open Elective
-  - `8` = Any course with a 2 hr class component
-  - `9` = Any course with a 4 hr class component
+Traditional timetable preparation requires considerable manual effort to coordinate subjects, faculty members, classes, classrooms, laboratories, and available time slots. Changes to one session can affect multiple other assignments, making conflict detection and timetable maintenance difficult.
 
-### Course Coding Indices
-- **Theory Courses:** `C#xx` or `E#xx` (where `#` represents year levels 1-9)
-- **Tutorial Courses:** `T#xx` (where `#` represents year levels 1-3. *No tutorials allowed after year level 3*)
+The project aims to automate this process through a constraint-based scheduling engine that reduces repetitive manual work and helps prevent scheduling conflicts.
 
-### Detailed Component Rules
+## Key Features
 
-#### Theory (Core/Elective)
-- **Duration:** 1 hr (Default) / 1.5 hr (Provisional)
-- **Weekly Frequency:** 3/week (Default), 2/week (Provisional), or 4/week (Default for index 9 courses; can use hybrid slots)
+- **Dynamic Excel Ingestion:** Upload academic data using standardised `.xlsx` templates. The backend parses, validates, and processes the uploaded spreadsheet.
+- **Constraint-Based Scheduling:** Uses a Python scheduling engine (`solver.py`) to assign sessions to feasible time slots while considering the defined scheduling constraints.
+- **Interactive Timetable Visualisation:** Displays generated schedules in a weekly grid through a React.js interface.
+- **Server-Loaded Default Data:** Loads predefined academic datasets using the *Load from Server* functionality.
+- **Room and Resource Allocation:** Supports classroom and laboratory assignments based on the scheduling requirements.
+- **Conflict Monitoring:** Displays scheduling status and active conflict warnings.
+- **Unassigned Session Management:** Provides visibility into sessions that could not be scheduled automatically.
+- **SQLite Data Persistence:** Stores timetable-related data using SQLite.
+- **One-Click Local Execution:** Includes Windows batch scripts to simplify launching the frontend and backend locally.
 
-#### Lab
-- **Duration:** 2, 3, or 4 hr blocks. 3 hr is the default. 
-- *Note: A 2 hr lab must always have an accompanying theory component of either 1 hr or 2 hr.*
-- **Frequency:** 1/week
-- **Lab Indexing System:** `L(X1)(X2)xx`
-  - `X1` = Year index (1-5)
-  - `X2` = Component index (`0` for general labs, `8` for 2hr lab components, `9` for 4hr lab components)
-- **Lab Sessions (Nx):** High student loads can require multiple sessions. Sessions can occupy parallel slots on the same day, different days, or both. Represented via `SS-0`, `SS-1`, or `SS-2`.
+## Application Preview
 
-#### Tutorial
-- **Duration:** 1 hr
-- **Frequency:** 1/week
 
----
+## Technology Stack
 
-## 2. Space & Course Resources
+| Component | Technologies |
+|---|---|
+| Frontend | React.js, Vite, JavaScript |
+| Backend | Python, FastAPI/Flask |
+| Scheduling Engine | Constraint-based scheduling algorithm |
+| Data Processing | Pandas, OpenPyXL |
+| Database | SQLite |
+| Input Format | Microsoft Excel (`.xlsx`) |
+| Development Tools | Antigravity IDE, Git, GitHub |
+| Local Execution | Windows batch scripts |
 
-### Capacities
-- `R` = Total number of available classrooms
-- `L` = Total number of standard laboratories
-- `P` = Total number of special lab spaces
 
-### Active Course Count Registry
-The dataset ingestion must account for the following volume of courses across indices:
-- **Year 1:** `C1` = 4 courses, `L1` = 6 courses, `T1` = 1 course
-- **Year 2:** `C2` = 4 courses, `L2` = 2 courses, `T2` = 3 courses
-- **Year 3:** `C3` = 5 courses, `L3` = 4 courses, `E3` = 3 courses
-- **Year 4:** `E4` = 1 course
-- **Year 5 (MTech):** `C5` = 16 courses, `L5` = 7 courses
-- **Electives & Open Electives:** `E6` = 19 courses, `E7` = 2 courses
+## System Architecture
 
----
+The application follows a modular frontend-backend architecture that separates user interaction, data processing, scheduling logic, and data storage.
 
-## 3. Mandatory Rules (Hard Constraints)
+```text
+                 USER
+                   |
+                   v
+        React.js / Vite Frontend
+                   |
+             REST API Requests
+                   |
+                   v
+          Python Backend API
+                   |
+          +--------+---------+
+          |                  |
+          v                  v
+   Excel Ingestion       Database Layer
+   & Validation          SQLite
+          |                  |
+          +--------+---------+
+                   |
+                   v
+          Scheduling Engine
+              solver.py
+                   |
+                   v
+        Generated Timetable
+                   |
+                   v
+        Interactive Grid UI
+```
 
-1. **Elective Grouping:** Elective courses (excluding Open Electives) must be split into 5 distinct groups (`G1, G2, G3, G4, G5`). Each group shares a common, fully synchronized schedule.
-2. **Lab Ties & Allocations:** Labs with index components 0 and 9 are independent entities. Labs with an index component of 8 are strictly tied entities to a matching theory course of index 8. Special lab space allocation (`P`) is tied exclusively to year index 4.
-3. **Open Elective (E7) Limits:** `E7` courses are structurally limited. They can only be assigned to 1-hour slots starting at either 12:00 or 13:00.
-4. **Afternoon Isolation (SL1):** All courses belonging to `C3`, `E6`, and `L2` must be placed entirely within the Afternoon slot category (`SL1`).
-5. **Morning Isolation (SL0):** All courses belonging to `C1`, `C2`, `C5`, `L1`, `L3`, and `L5` must be placed entirely within the Morning slot category (`SL0`).
-6. **Daily Theory Cap:** Any single theory course can have a maximum of 1 session per day.
-7. **1.5 hr Slot Maximum Formula:** The maximum number of courses globally permitted to use a 1.5-hour slot configuration (`H1`) is bounded by the calculation: `C# - T#`.
-8. **Tutorial Slot Isolation:** Tutorials (`T#xx`) are strictly limited to the following 1-hour slots: 08:00 - 09:00 or 17:00 - 18:00.
-9. **Exclusion Constraint:** No `C4` or `T4` courses exist within the system parameters. Any entry matching this criteria must be rejected.
+*The diagram represents the high-level architecture. Refer to the backend implementation for the exact execution and data-access sequence.*
+
+## Application Workflow
+
+### 1. Load Default Data
+
+The user selects **Load from Server** to retrieve the predefined academic dataset through the backend API.
+
+### 2. Upload Custom Academic Data
+
+The user downloads the Excel template, enters the required academic information, and uploads the completed `.xlsx` file through the interface.
+
+### 3. Process and Validate Input
+
+The backend processes the uploaded spreadsheet, checks the input structure, and prepares the data for scheduling.
+
+### 4. Generate the Timetable
+
+The scheduling engine evaluates the academic sessions and applicable constraints to assign suitable time slots and rooms.
+
+### 5. Visualise and Review Results
+
+The generated timetable is displayed in an interactive weekly grid. The interface provides scheduling status, room assignments, conflict information, and visibility into any unassigned sessions.
+
+## Project Structure
+
+```text
+Automated-Flexible-Timetable-Scheduler/
+│
+├── backend/
+│   ├── main.py
+│   ├── solver.py
+│   ├── ingestion.py
+│   ├── database.py
+│   ├── auth.py
+│   ├── requirements.txt
+│   └── ...
+│
+├── frontend/
+│   ├── src/
+│   ├── public/
+│   ├── package.json
+│   ├── vite.config.js
+│   └── ...
+│
+├── docs/
+│   └── screenshots/
+│       └── dashboard.png
+│
+├── RULES.md
+├── timetable_input.xlsx
+├── Launch__Timetable.bat
+├── README.md
+└── .gitignore
+```
+
+*This is an indicative structure.*
+
+### Key Components
+
+| File / Directory | Responsibility |
+| `backend/main.py` | Backend API endpoints and application workflow |
+| `backend/solver.py` | Timetable scheduling and constraint evaluation |
+| `backend/ingestion.py` | Excel parsing and input validation |
+| `backend/database.py` | Database setup and data-access operations |
+| `backend/auth.py` | Authentication and access control, if enabled |
+| `frontend/src/` | Frontend components and user interface |
+| `RULES.md` | Documentation of scheduling constraints |
+| `timetable_input.xlsx` | Excel input template |
+| `Launch__Timetable.bat` | Local application launcher, if configured |
+
+## Getting Started
+
+### Prerequisites
+
+Install the following software before running the application:
+
+- Python version compatible with the backend dependencies
+- Node.js and npm
+- Git
+- Windows, if using the supplied `.bat` launcher
+
+### 1. Clone the Repository
+
+```bash
+git clone <YOUR_REPOSITORY_URL>
+cd <YOUR_REPOSITORY_FOLDER>
+```
+
+### 2. Set Up the Backend
+
+Open a terminal in the backend directory:
+
+```bash
+cd backend
+python -m venv .venv
+```
+
+Activate the virtual environment on Windows:
+
+```powershell
+.venv\Scripts\activate
+```
+
+Install the backend dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Configure the required environment variables according to the backend configuration and initialise the database if initialisation isn't automatic.
+
+### 3. Set Up the Frontend
+
+Open a separate terminal:
+
+```bash
+cd frontend
+npm install
+```
+Create the appropriate frontend environment configuration if required by the application. Set the API base URL to the local backend address.
+
+### 4. Launch the Application
+
+Use the provided `Launch__Timetable.bat` or `run_app.bat` script if it is configured to launch both services.
+
+Alternatively, start the backend and frontend using the commands specified in their respective configurations. For example, a Vite frontend commonly runs using:
+
+```bash
+npm run dev
+```
+
+The exact backend startup command depends on whether the application uses FastAPI, Flask, or another framework. Consult the existing backend entry point and README configuration.
+
+## Results and Performance
+
+The application has been tested locally using an academic timetable dataset.
+
+A demonstrated run produced the following results:
+
+| Metric | Observed Result |
+|---|---:|
+| Scheduled sessions | 196 |
+| Unassigned sessions | 0 |
+| Active conflict warnings | 0 |
+| Solver runtime | 6.259 seconds |
+
+These results correspond to the tested dataset and displayed application state. Performance may vary with dataset size, scheduling constraints, available computational resources, and execution environment.
+
+## Scheduling Constraints
+
+The scheduling engine is designed to consider the rules defined in [`RULES.md`](RULES.md).
+
+Depending on the implemented rules, these may include:
+
+- Preventing simultaneous assignments for the same faculty member.
+- Preventing multiple sessions from occupying the same room at the same time.
+- Respecting session duration and time-slot requirements.
+- Applying relevant daily scheduling limits.
+- Supporting appropriate classroom and laboratory allocation.
+
+Refer to `RULES.md` and `backend/solver.py` for the exact constraints enforced by the implementation.
+
+## Current Limitations and Future Improvements
+
+- **Cloud deployment:** The application runs locally; deploying the complete scheduling workflow requires a hosting environment with sufficient computational resources.
+- **Performance optimisation:** Further testing and optimisation may improve scheduling time for larger datasets.
+- **Scalability:** Background job execution and suitable server infrastructure could improve support for computationally intensive scheduling requests.
+- **Enhanced scheduling:** Additional constraints and optimisation objectives could be incorporated as requirements evolve.
+- **Testing:** Broader validation across diverse datasets and infeasible scheduling scenarios would strengthen reliability.
+
