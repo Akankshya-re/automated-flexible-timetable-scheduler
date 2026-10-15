@@ -138,6 +138,7 @@ Automated-Flexible-Timetable-Scheduler/
 ### Key Components
 
 | File / Directory | Responsibility |
+|---|---:|
 | `backend/main.py` | Backend API endpoints and application workflow |
 | `backend/solver.py` | Timetable scheduling and constraint evaluation |
 | `backend/ingestion.py` | Excel parsing and input validation |
